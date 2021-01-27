@@ -82,6 +82,11 @@ def welcom_and_choose():
                 break
             else:
                 print("Wrong name")
+        elif word in ("i", "I"):
+            for i in moods_list:
+                print(i.name)
+                print("\tFiles:", "\n\t\t".join(i.files))
+                print("\tWebpages:", "\n\t\t".join(i.webpages))
 
         elif word in [str(i) for i in range(0,len(moods_list))]:
             moods_list[int(word)].run()
@@ -115,11 +120,7 @@ def create_mood(name, moods_list):
                         continue
                 else:
                     break
-        elif word in ("i", "I"):
-            for i in moods_list:
-                print(i.name)
-                print("\tFiles:", "\t\t\n".join(i.files))
-                print("\tWebpages:", "\t\t\n".join(i.webpages))
+
         elif word in ("w", "W"):
             print("Add full address to webpage. After each approve by enter, if you finished approve empty line\t")
             while True:
@@ -194,7 +195,7 @@ def edit_mood(var, moods_list, name_list):
                     while True:
                         name = input()
                         if name:
-                            edit_mood.webpages(name)
+                            edit_mood.add_web(name)
                         else:
                             ar = 0
                             break
