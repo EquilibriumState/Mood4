@@ -3,8 +3,8 @@ import sys
 import pickle
 import webbrowser
 
-class mood:
-    def __init__(self,name):
+class mood: #class for moods
+    def __init__(self,name): #given string, while creating will be name of the mood
         self.name = name
         self.webpages = []
         self.files = []
@@ -18,7 +18,7 @@ class mood:
     def add_files(self, file):
         self.files.append(file)
 
-    def run(self):
+    def run_os(self): #run in macOS, check if the path and websites are correct
         for i in self.webpages:
             try:
                 webbrowser.open(i)
@@ -31,6 +31,10 @@ class mood:
                 print(i, "is not valid path")
 
 def welcom_and_choose():
+    '''
+    Main function, which let us navigate in the program
+    :return:
+    '''
     print(r'''Hello.
     This program prepare your computer for work, relax or whatever you like.
     If you want to start 
@@ -38,12 +42,12 @@ def welcom_and_choose():
     2. Or you can [C]reate new mood, [E]dit, [I]nfo (showing which mood what contains), [R]emove one or [Q]uit
     If you want to go back just input empty line''')
 
-    if "moodslist.picle" not in os.listdir('.'):
+    if "moodslist.picle" not in os.listdir('.'): #check if we already have saved moods
         moods_list = []
-        with open("moodslist.picle", "wb") as create_file:
+        with open("moodslist.picle", "wb") as create_file: #if not creating empty list and pickle it
             pickle.dump(moods_list, create_file)
     else:
-        with open("moodslist.picle", "rb") as open_file:
+        with open("moodslist.picle", "rb") as open_file: #if yes is reading saved moods to the list
             moods_list = pickle.load(open_file)
 
     name_list = [i.name for i in moods_list]
@@ -54,19 +58,19 @@ def welcom_and_choose():
     while True:
         word = input("Enter input:\t")
 
-        if word in ("q", "Q"):
+        if word in ("q", "Q"): #decide to quit program
             sys.exit()
-        elif word in ("r", "R"):
+        elif word in ("r", "R"): #decide to remove mood
             name = input("What's the name of the mood you want to remove?\t")
             if name in name_list:
-                moods_list.remove(moods_list[name_list.index(name)])
+                moods_list.remove(moods_list[name_list.index(name)]) #remove mood from our list and save it
                 with open("moodslist.picle", "wb") as create_file:
                     pickle.dump(moods_list, create_file)
                 break
 
-        elif word in ("c", "C"):
+        elif word in ("c", "C"): #decide to create new mood
             name = input ("What's the name of the mood?\t")
-            if name:
+            if name: #chceck if mood with that name already exists
                 if name in name_list:
                     print("That mood already exist")
                     continue
@@ -75,32 +79,33 @@ def welcom_and_choose():
             else:
                 continue
 
-        elif word in ("e", "E"):
+        elif word in ("e", "E"): #decide to edit mood
             name = input("What's the name of the mood you want to edit?\t")
             if name in name_list:
                 edit_mood(name, moods_list, name_list)
                 break
             else:
                 print("Wrong name")
-        elif word in ("i", "I"):
+
+        elif word in ("i", "I"): #decide to print info about moods
             for i in moods_list:
                 print(i.name)
                 print("\tFiles:", "\n\t\t".join(i.files))
                 print("\tWebpages:", "\n\t\t".join(i.webpages))
 
-        elif word in [str(i) for i in range(0,len(moods_list))]:
-            moods_list[int(word)].run()
+        elif word in [str(i) for i in range(0,len(moods_list))]: #run mood chosen from number
+            moods_list[int(word)].run_os()
             sys.exit()
 
-        elif word in [i.name for i in moods_list]:
+        elif word in [i.name for i in moods_list]: #run mood chosen from name
             moods_list[[i.name for i in moods_list].index(word)].run()
             sys.exit()
         else:
             print("Unknown input")
-    welcom_and_choose()
+    welcom_and_choose() #if we break a loop without quiting or executeting mood, we start this function from the start
 
 def create_mood(name, moods_list):
-    new_mood = mood(name)
+    new_mood = mood(name) #create class with given name
     print("Do you want to add [F]ile, [W]ebpage, [R]estart (If you finished click R) or [Q]uit?")
     while True:
         word = input("Enter input:\t")
@@ -108,7 +113,7 @@ def create_mood(name, moods_list):
         if word in ("q", "Q"):
             sys.exit()
 
-        elif word in ("f", "F"):
+        elif word in ("f", "F"): #decide to add files
             print("Add full path to files. After each approve by enter, if you finished approve empty line\t")
             while True:
                 name = input ()
@@ -121,7 +126,7 @@ def create_mood(name, moods_list):
                 else:
                     break
 
-        elif word in ("w", "W"):
+        elif word in ("w", "W"): #decide to add websites
             print("Add full address to webpage. After each approve by enter, if you finished approve empty line\t")
             while True:
                 name = input ()
@@ -130,15 +135,15 @@ def create_mood(name, moods_list):
                 else:
                     break
 
-        elif word in ("r", "R"):
+        elif word in ("r", "R"): #decide to finish
             break
 
-    moods_list.append(new_mood)
+    moods_list.append(new_mood) #we add mood to our list and save it
     with open("moodslist.picle", "wb") as create_file:
         pickle.dump(moods_list, create_file)
 
 def edit_mood(var, moods_list, name_list):
-    edit_mood = moods_list[name_list.index(var)]
+    edit_mood = moods_list[name_list.index(var)] #choose which mood we edit
     print("Do you want to edit [F]iles, [W]ebpages, change [N]ame, [R]estart (If you finished click R) or [Q]uit?")
     while True:
         word = input("Enter input:\t")
@@ -146,7 +151,7 @@ def edit_mood(var, moods_list, name_list):
         if word in ("q", "Q"):
             sys.exit()
 
-        elif word in ("f", "F"):
+        elif word in ("f", "F"): #decide to edit files
             while True:
                 ar = input("[A]dd or [R]emove")
                 if ar in ("A","a"):
@@ -172,7 +177,7 @@ def edit_mood(var, moods_list, name_list):
                         if name:
                             try:
                                 name = int(name)
-                                if name not in range(0,len(edit_mood.files)):
+                                if name not in range(len(edit_mood.files)+1): #cheking if we have file with that number
                                     print("This number is not in the list")
                                     continue
                                 else:
@@ -186,7 +191,7 @@ def edit_mood(var, moods_list, name_list):
                 if not ar:
                     break
 
-        elif word in ("w", "W"):
+        elif word in ("w", "W"): #decided to manage websites
             print("[A]dd or [R]emove")
             while True:
                 ar = input()
@@ -209,7 +214,7 @@ def edit_mood(var, moods_list, name_list):
                         if name:
                             try:
                                 name = int(name)
-                                if name not in range(0,len(edit_mood.files)):
+                                if name not in range(len(edit_mood.files)+1):
                                     print("This number is not in the list")
                                     continue
                                 else:
@@ -223,7 +228,7 @@ def edit_mood(var, moods_list, name_list):
                 if not ar:
                     break
 
-        elif word in ("n", "N"):
+        elif word in ("n", "N"): #decided to change name
             while True:
                 name = input("Insert new name:\t")
                 if name not in name_list:
@@ -235,7 +240,7 @@ def edit_mood(var, moods_list, name_list):
         elif word in ("r", "R"):
             break
 
-    moods_list[name_list.index(var)] = edit_mood
+    moods_list[name_list.index(var)] = edit_mood #replicing changed mood with orginal and save it
 
     with open("moodslist.picle", "wb") as create_file:
         pickle.dump(moods_list, create_file)
